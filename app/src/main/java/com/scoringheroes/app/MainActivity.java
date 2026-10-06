@@ -45,9 +45,9 @@ public class MainActivity extends Activity {
     TextView A=t(a,25,true);TextView B=t(b,13,false);B.setTextColor(muted);c.addView(A);c.addView(B);body.addView(c,new LinearLayout.LayoutParams(-1,-2));
   }
   void section(String s){TextView v=t(s.toUpperCase(),14,true);v.setTextColor(Color.rgb(152,202,232));v.setPadding(dp(2),dp(22),0,dp(8));body.addView(v);}
-  void card(String name,String desc,String url){
+  void card(String name,String desc,String url,String screenName){
     LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);c.setPadding(dp(2),dp(5),dp(2),dp(5));c.setBackground(bg(panel,16));
-    TextView a=t(name,17,true),b=t(desc,12,false);b.setTextColor(muted);c.addView(a);c.addView(b);c.setOnClickListener(v->open(url,name));
+    TextView a=t(name,17,true),b=t(desc,12,false);b.setTextColor(muted);c.addView(a);c.addView(b);c.setOnClickListener(v->open(url,screenName));
     LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(0,0,0,dp(9));body.addView(c,p);
   }
   void showHome(){
