@@ -34,6 +34,36 @@ jobs:
           test -f app/build/outputs/apk/debug/app-debug.apk
           ls -lh app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Boot emulator and capture Welcome runtime evidence
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            adb install -r app/build/outputs/apk/debug/app-debug.apk
+            adb shell am force-stop com.scoringheroes.app
+            adb shell monkey -p com.scoringheroes.app -c android.intent.category.LAUNCHER 1
+            sleep 3
+            mkdir -p runtime-evidence
+            adb exec-out screencap -p > runtime-evidence/welcome.png
+            adb shell uiautomator dump /sdcard/welcome.xml
+            adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
+            grep -q "WELCOME TO" runtime-evidence/welcome.xml
+            grep -q "SCORING HEROES" runtime-evidence/welcome.xml
+            grep -q "Choose language" runtime-evidence/welcome.xml
+            grep -q "Android" runtime-evidence/welcome.xml
+            grep -q "Apple" runtime-evidence/welcome.xml
+            grep -q "Windows" runtime-evidence/welcome.xml
+
+      - name: Upload Welcome runtime evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: welcome-runtime-evidence
+          path: runtime-evidence/
+          if-no-files-found: error
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
