@@ -20,13 +20,135 @@ public class MainActivity extends Activity {
   TextView t(String s,int sp,boolean bold){TextView v=new TextView(this);v.setText(s);v.setTextColor(white);v.setTextSize(sp);v.setTypeface(null,bold?Typeface.BOLD:Typeface.NORMAL);v.setPadding(dp(16),dp(10),dp(16),dp(10));return v;}
   GradientDrawable bg(int c,float r){GradientDrawable g=new GradientDrawable();g.setColor(c);g.setCornerRadius(dp((int)r));g.setStroke(dp(1),Color.rgb(35,63,84));return g;}
   void showSplash(){
-    LinearLayout x=new LinearLayout(this);x.setOrientation(LinearLayout.VERTICAL);x.setGravity(Gravity.CENTER);x.setPadding(dp(28),dp(28),dp(28),dp(28));
-    GradientDrawable g=new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{Color.rgb(2,23,42),Color.rgb(31,7,24)});x.setBackground(g);
-    TextView mark=t("SH",52,true);mark.setGravity(Gravity.CENTER);mark.setTextColor(Color.rgb(225,30,55));x.addView(mark,new LinearLayout.LayoutParams(-1,dp(90)));
-    TextView brand=t("SCORING HEROES",28,true);brand.setGravity(Gravity.CENTER);x.addView(brand);
-    TextView tag=t("GRASSROOTS TO GLOBAL",13,true);tag.setTextColor(Color.rgb(175,205,225));tag.setGravity(Gravity.CENTER);x.addView(tag);
-    setContentView(x);new Handler(Looper.getMainLooper()).postDelayed(()->showHome(),900);
+    final FrameLayout root=new FrameLayout(this);
+    root.setBackground(new WelcomeBackground());
+
+    LinearLayout content=new LinearLayout(this);
+    content.setOrientation(LinearLayout.VERTICAL);
+    content.setGravity(Gravity.CENTER_HORIZONTAL);
+    content.setPadding(dp(24),dp(28),dp(24),dp(28));
+    root.addView(content,new FrameLayout.LayoutParams(-1,-1));
+
+    LinearLayout top=new LinearLayout(this);
+    top.setGravity(Gravity.CENTER_VERTICAL);
+    TextView country=t("🇮🇳  India ⌄",16,false);
+    country.setPadding(0,dp(6),0,dp(6));
+    TextView language=t("Languages ⌄",16,false);
+    language.setGravity(Gravity.END);
+    language.setPadding(0,dp(6),0,dp(6));
+    top.addView(country,new LinearLayout.LayoutParams(0,dp(48),1));
+    top.addView(language,new LinearLayout.LayoutParams(0,dp(48),1));
+    content.addView(top,new LinearLayout.LayoutParams(-1,dp(56)));
+
+    Space upper=new Space(this);
+    content.addView(upper,new LinearLayout.LayoutParams(1,0,0.20f));
+
+    TextView welcome=t("W E L C O M E   T O",27,true);
+    welcome.setGravity(Gravity.CENTER);
+    welcome.setLetterSpacing(0.08f);
+    content.addView(welcome,new LinearLayout.LayoutParams(-1,dp(74)));
+
+    View flare=new View(this);
+    GradientDrawable flareBg=new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+      new int[]{Color.TRANSPARENT,Color.rgb(0,116,255),Color.WHITE,Color.rgb(236,28,48),Color.TRANSPARENT});
+    flare.setBackground(flareBg);
+    LinearLayout.LayoutParams fp=new LinearLayout.LayoutParams(-1,dp(2));
+    fp.setMargins(dp(48),0,dp(48),dp(18));
+    content.addView(flare,fp);
+
+    LinearLayout brand=new LinearLayout(this);
+    brand.setOrientation(LinearLayout.VERTICAL);
+    brand.setGravity(Gravity.CENTER);
+    TextView mark=t("SH",58,true);
+    mark.setGravity(Gravity.CENTER);
+    mark.setTextColor(Color.rgb(225,30,55));
+    TextView brandName=t("SCORING HEROES",31,true);
+    brandName.setGravity(Gravity.CENTER);
+    TextView assetGuard=t("APPROVED SH LOGO ASSET PENDING REPOSITORY BINARY",9,false);
+    assetGuard.setTextColor(Color.rgb(122,146,166));
+    assetGuard.setGravity(Gravity.CENTER);
+    brand.addView(mark,new LinearLayout.LayoutParams(-1,dp(74)));
+    brand.addView(brandName,new LinearLayout.LayoutParams(-1,dp(58)));
+    brand.addView(assetGuard,new LinearLayout.LayoutParams(-1,dp(34)));
+    content.addView(brand,new LinearLayout.LayoutParams(-1,-2));
+
+    Space middle=new Space(this);
+    content.addView(middle,new LinearLayout.LayoutParams(1,0,0.28f));
+
+    PlatformSymbols platforms=new PlatformSymbols(this);
+    content.addView(platforms,new LinearLayout.LayoutParams(-1,dp(112)));
+
+    Space lower=new Space(this);
+    content.addView(lower,new LinearLayout.LayoutParams(1,0,0.14f));
+
+    TextView continueHint=t("Select language to continue",12,false);
+    continueHint.setTextColor(muted);
+    continueHint.setGravity(Gravity.CENTER);
+    content.addView(continueHint,new LinearLayout.LayoutParams(-1,dp(42)));
+
+    language.setOnClickListener(v->showMobileEntry());
+    setContentView(root);
   }
+
+  void showMobileEntry(){
+    shell("MOBILE / OTP REQUEST","Secure authorized verification");
+    hero("GET STARTED","Enter your mobile number to continue");
+    card("India (+91)","Mobile number entry • server verification required",BASE+"join.php","MOBILE / OTP");
+  }
+
+  final class WelcomeBackground extends android.graphics.drawable.Drawable {
+    final android.graphics.Paint p=new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+    @Override public void draw(android.graphics.Canvas c){
+      android.graphics.Rect b=getBounds();
+      p.setShader(new android.graphics.LinearGradient(b.left,b.top,b.right,b.bottom,
+        new int[]{Color.rgb(0,39,96),Color.rgb(1,16,43),Color.rgb(35,5,34),Color.rgb(115,0,10)},
+        null,android.graphics.Shader.TileMode.CLAMP));
+      c.drawRect(b,p); p.setShader(null);
+      p.setStyle(android.graphics.Paint.Style.STROKE);
+      for(int i=0;i<7;i++){
+        p.setStrokeWidth(dp(i==0?2:1));
+        p.setColor(i<3?Color.argb(115,0,108,255):Color.argb(100,220,10,30));
+        float inset=dp(24+i*34);
+        android.graphics.RectF r=new android.graphics.RectF(b.left-inset,b.top+dp(110+i*35),b.right+inset,b.bottom+dp(260+i*45));
+        c.drawArc(r,198,132,false,p);
+      }
+      p.setStyle(android.graphics.Paint.Style.FILL);
+    }
+    @Override public void setAlpha(int a){p.setAlpha(a);}
+    @Override public void setColorFilter(android.graphics.ColorFilter f){p.setColorFilter(f);}
+    @Override public int getOpacity(){return android.graphics.PixelFormat.OPAQUE;}
+  }
+
+  final class PlatformSymbols extends View {
+    final android.graphics.Paint p=new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+    PlatformSymbols(Context c){super(c);}
+    @Override protected void onDraw(android.graphics.Canvas c){
+      super.onDraw(c); float w=getWidth(),cy=getHeight()*0.48f;
+      drawAndroid(c,w*0.20f,cy,dp(25));
+      drawApple(c,w*0.50f,cy,dp(26));
+      drawWindows(c,w*0.80f,cy,dp(27));
+    }
+    void drawAndroid(android.graphics.Canvas c,float x,float y,float s){
+      p.setColor(Color.rgb(123,224,28)); p.setStyle(android.graphics.Paint.Style.FILL);
+      c.drawRoundRect(x-s*.70f,y-s*.35f,x+s*.70f,y+s*.65f,s*.18f,s*.18f,p);
+      c.drawArc(x-s*.70f,y-s*.85f,x+s*.70f,y+s*.10f,180,180,true,p);
+      p.setStrokeWidth(dp(2)); p.setStyle(android.graphics.Paint.Style.STROKE);
+      c.drawLine(x-s*.45f,y-s*.70f,x-s*.68f,y-s*1.0f,p); c.drawLine(x+s*.45f,y-s*.70f,x+s*.68f,y-s*1.0f,p);
+      p.setStyle(android.graphics.Paint.Style.FILL);
+    }
+    void drawApple(android.graphics.Canvas c,float x,float y,float s){
+      p.setColor(Color.WHITE); p.setStyle(android.graphics.Paint.Style.FILL);
+      c.drawOval(x-s*.72f,y-s*.55f,x+s*.10f,y+s*.70f,p); c.drawOval(x-s*.08f,y-s*.55f,x+s*.72f,y+s*.70f,p);
+      p.setColor(navy); c.drawCircle(x+s*.70f,y-s*.20f,s*.30f,p);
+      p.setColor(Color.WHITE); android.graphics.Path leaf=new android.graphics.Path();
+      leaf.moveTo(x,y-s*.65f);leaf.quadTo(x+s*.12f,y-s*1.15f,x+s*.48f,y-s*1.18f);leaf.quadTo(x+s*.40f,y-s*.78f,x,y-s*.65f);c.drawPath(leaf,p);
+    }
+    void drawWindows(android.graphics.Canvas c,float x,float y,float s){
+      p.setColor(Color.rgb(0,174,239)); float g=dp(2);
+      c.drawRect(x-s,y-s,x-g,y-g,p);c.drawRect(x+g,y-s,x+s,y-g,p);c.drawRect(x-s,y+g,x-g,y+s,p);c.drawRect(x+g,y+g,x+s,y+s,p);
+    }
+  }
+
   void shell(String h,String s){
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(navy);
     LinearLayout top=new LinearLayout(this);top.setGravity(Gravity.CENTER_VERTICAL);top.setPadding(dp(12),dp(8),dp(8),dp(8));top.setBackgroundColor(Color.rgb(5,25,42));
