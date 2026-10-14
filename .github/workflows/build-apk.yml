@@ -34,7 +34,20 @@ jobs:
           test -f app/build/outputs/apk/debug/app-debug.apk
           ls -lh app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Boot emulator and capture Welcome runtime evidence
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SCORING-HEROES-13.0.1-email-OTP-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Boot emulator and capture registration runtime evidence
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -50,12 +63,8 @@ jobs:
             adb exec-out screencap -p > runtime-evidence/welcome.png
             adb shell uiautomator dump /sdcard/welcome.xml
             adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
-            grep -q "WELCOME TO" runtime-evidence/welcome.xml
             grep -q "SCORING HEROES" runtime-evidence/welcome.xml
-            grep -q "Choose language" runtime-evidence/welcome.xml
-            grep -q "Android" runtime-evidence/welcome.xml
-            grep -q "Apple" runtime-evidence/welcome.xml
-            grep -q "Windows" runtime-evidence/welcome.xml
+            python3 scripts/check-email-entry.py
 
       - name: Upload Welcome runtime evidence
         uses: actions/upload-artifact@v4
@@ -64,9 +73,3 @@ jobs:
           path: runtime-evidence/
           if-no-files-found: error
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: SCORING-HEROES-V12.2-debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error

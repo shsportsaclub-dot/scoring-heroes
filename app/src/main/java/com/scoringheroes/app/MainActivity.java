@@ -14,6 +14,7 @@ import java.util.*;
 
 public class MainActivity extends Activity {
   final String BASE="https://scoringheroes.com/";
+  final String EMAIL_APP="https://scoring-heroes-api.onrender.com/";
   LinearLayout body,bottom; TextView title,sub;
   int white=Color.WHITE, muted=Color.rgb(180,194,208), navy=Color.rgb(3,17,31), panel=Color.rgb(10,31,49), red=Color.rgb(211,26,48);
   @Override public void onCreate(Bundle b){super.onCreate(b); showSplash();}
@@ -91,8 +92,9 @@ public class MainActivity extends Activity {
   }
 
   void showMobileEntry(){
-    shell("MOBILE / OTP REQUEST","Secure authorized verification");
-    hero("GET STARTED","Enter your mobile number to continue");
+    shell("REGISTER / LOGIN","Choose your verification method");
+    hero("GET STARTED","Email registration with a 6-digit OTP");
+    card("Email • 6-digit OTP","Open registration → Email → Send code → Verify. Email delivery depends on the configured server provider.",EMAIL_APP,"EMAIL / 6-DIGIT OTP");
     card("India (+91)","Mobile number entry • server verification required",BASE+"join.php","MOBILE / OTP");
   }
 
@@ -186,7 +188,7 @@ public class MainActivity extends Activity {
   }
   void showDiscover(){shell("DISCOVER","Sports ecosystem");hero("DISCOVER","Players • Teams • Grounds • Tournaments • Services");card("Auction","Tournament auction control",BASE+"service-hub-v2/auction/","AUCTION");card("Marketplace / OLX","Sports marketplace and used gear",BASE+"service-hub-v2/marketplace/","MARKETPLACE");card("Streaming","Broadcast and live production",BASE+"service-hub-v2/broadcast/studio-v10.php","STREAMING");card("Auto Advertising","Sponsor campaigns and event triggers",BASE+"service-hub-v2/advertising/","ADVERTISING");}
   void showCricket(){shell("CRICKET","Match intelligence");hero("CRICKET CONTROL","Score • Field • Review • Performance");card("Field View","Oval field animation and player positions",BASE+"service-hub-v2/field-animation/","FIELD VIEW");card("Technical Performance","Bowling, batting and fielding measurements",BASE+"service-hub-v2/technical-performance/","TECHNICAL PERFORMANCE");card("Player Status","Match, season and career status",BASE+"service-hub-v2/player-status/","PLAYER STATUS");card("Broadcast / DRS","Camera, replay, review and graphics control",BASE+"service-hub-v2/broadcast/studio-v10.php","BROADCAST / DRS");}
-  void showCommunity(){shell("COMMUNITY","Connect around the game");hero("SPORTS COMMUNITY","Players • Teams • Academies • Fans");card("Player Profile / Login","WhatsApp OTP and Player ID",BASE+"join.php","PLAYER PROFILE");card("Commentary Studio","Text, voice and match commentary",BASE+"service-hub-v2/commentary/studio.php","COMMENTARY");card("Notifications","Match and account alerts",BASE+"service-hub-v2/platform/mobile/?screen=notifications","NOTIFICATIONS");}
+  void showCommunity(){shell("COMMUNITY","Connect around the game");hero("SPORTS COMMUNITY","Players • Teams • Academies • Fans");card("Email • 6-digit OTP","Email registration and verification",EMAIL_APP,"EMAIL / 6-DIGIT OTP");card("Player Profile / Login","WhatsApp OTP and Player ID",BASE+"join.php","PLAYER PROFILE");card("Commentary Studio","Text, voice and match commentary",BASE+"service-hub-v2/commentary/studio.php","COMMENTARY");card("Notifications","Match and account alerts",BASE+"service-hub-v2/platform/mobile/?screen=notifications","NOTIFICATIONS");}
   void open(String url,String name){
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(navy);
     LinearLayout bar=new LinearLayout(this);bar.setGravity(Gravity.CENTER_VERTICAL);TextView back=t("‹",34,true);back.setGravity(Gravity.CENTER);back.setOnClickListener(v->showHome());bar.addView(back,new LinearLayout.LayoutParams(dp(56),dp(56)));TextView n=t(name,17,true);bar.addView(n,new LinearLayout.LayoutParams(0,dp(56),1));root.addView(bar);
