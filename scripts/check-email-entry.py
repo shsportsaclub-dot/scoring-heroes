@@ -28,3 +28,14 @@ capture("email-webview")
 root = ET.parse("runtime-evidence/email-webview.xml")
 assert any("EMAIL / 6-DIGIT OTP" in n.get("text", "") for n in root.iter("node"))
 print("PASS: native registration entry and email WebView opened. No email requested; inbox delivery not tested.")
+
+tap_text("runtime-evidence/email-webview.xml", "‹")
+capture("sports-home")
+root = ET.parse("runtime-evidence/sports-home.xml")
+for title in ["Cricket Live", "Football Live", "Kabaddi Live", "Badminton Live"]:
+    assert any(title in n.get("text", "") for n in root.iter("node")), title
+tap_text("runtime-evidence/sports-home.xml", "Football Live")
+capture("football-webview")
+root = ET.parse("runtime-evidence/football-webview.xml")
+assert any("FOOTBALL LIVE" in n.get("text", "") for n in root.iter("node"))
+print("PASS: APK live sport entries and Football viewer route opened; production scoring not tested here.")

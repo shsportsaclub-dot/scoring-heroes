@@ -95,6 +95,7 @@ public class MainActivity extends Activity {
     shell("REGISTER / LOGIN","Choose your verification method");
     hero("GET STARTED","Email registration with a 6-digit OTP");
     card("Email • 6-digit OTP","Open registration → Email → Send code → Verify. Email delivery depends on the configured server provider.",EMAIL_APP,"EMAIL / 6-DIGIT OTP");
+    card("Live Sports","Cricket • Football • Kabaddi • Badminton • Volleyball",EMAIL_APP,"LIVE SPORTS");
     card("India (+91)","Mobile number entry • server verification required",BASE+"join.php","MOBILE / OTP");
   }
 
@@ -160,7 +161,7 @@ public class MainActivity extends Activity {
     root.addView(top,new LinearLayout.LayoutParams(-1,dp(68)));
     ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(14),dp(14),dp(14),dp(92));sc.addView(body);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));
     bottom=new LinearLayout(this);bottom.setGravity(Gravity.CENTER);bottom.setPadding(dp(4),dp(4),dp(4),dp(4));bottom.setBackgroundColor(Color.rgb(4,22,38));
-    nav("⌂\nHome",()->showHome());nav("◎\nDiscover",()->showDiscover());nav("＋\nSCORE",()->open(BASE+"service-hub-v2/scorer-pad/","SCORER PAD"));nav("◉\nCricket",()->showCricket());nav("♙\nCommunity",()->showCommunity());
+    nav("⌂\nHome",()->showHome());nav("◎\nDiscover",()->showDiscover());nav("＋\nSCORE",()->open(EMAIL_APP+"?sport=cricket","CRICKET SCORER"));nav("◉\nCricket",()->showCricket());nav("♙\nCommunity",()->showCommunity());
     root.addView(bottom,new LinearLayout.LayoutParams(-1,dp(72)));setContentView(root);
   }
   void nav(String label,Runnable r){TextView v=t(label,11,true);v.setGravity(Gravity.CENTER);v.setOnClickListener(x->r.run());bottom.addView(v,new LinearLayout.LayoutParams(0,-1,1));}
@@ -178,9 +179,14 @@ public class MainActivity extends Activity {
     shell("SCORING HEROES","Grassroots to Global");
     hero("LIVE MATCH CENTRE","Live • Schedule • Fixtures • Upcoming • Results");
     section("Match");
-    card("SCORING HEROES LIVE","SH-scored matches and live match centre",BASE,"LIVE MATCH CENTRE");
+    card("Cricket Live","Score cricket and watch shared matches",EMAIL_APP+"?sport=cricket","CRICKET LIVE");
     card("International & Leagues","Authorized feed area • no fabricated scores",BASE,"INTERNATIONAL & LEAGUES");
     card("Start / Continue Scoring","Professional scorer pad with match controls",BASE+"service-hub-v2/scorer-pad/","SCORER PAD");
+    section("Live Sports");
+    card("Football Live","Goals, match events and shared live score",EMAIL_APP+"?sport=football","FOOTBALL LIVE");
+    card("Kabaddi Live","Raid and tackle scoring with shared live score",EMAIL_APP+"?sport=kabaddi","KABADDI LIVE");
+    card("Badminton Live","Game/point scoring with shared live score",EMAIL_APP+"?sport=badminton","BADMINTON LIVE");
+    card("Volleyball Live","Set/point scoring with shared live score",EMAIL_APP+"?sport=volleyball","VOLLEYBALL LIVE");
     section("Explore");
     card("Highlights & Replay","Match clips, replay and record room",BASE+"service-hub-v2/broadcast/studio-v10.php","REPLAY");
     card("Grounds & Bookings","Ground discovery, availability and booking",BASE+"service-hub-v2/platform/mobile/?screen=grounds","GROUNDS");

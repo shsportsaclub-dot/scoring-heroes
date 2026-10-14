@@ -37,7 +37,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SCORING-HEROES-13.0.1-email-OTP-APK
+          name: SCORING-HEROES-13.0.2-LIVE-SPORTS-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
