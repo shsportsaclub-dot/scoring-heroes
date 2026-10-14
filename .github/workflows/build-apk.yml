@@ -41,6 +41,9 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
+      - name: Stop build daemon before emulator
+        run: gradle --stop
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -54,13 +57,15 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -cores 2 -feature -Vulkan
           script: |
             adb install -r app/build/outputs/apk/debug/app-debug.apk
             adb shell am force-stop com.scoringheroes.app
             adb shell monkey -p com.scoringheroes.app -c android.intent.category.LAUNCHER 1
             sleep 3
             mkdir -p runtime-evidence
-            adb exec-out screencap -p > runtime-evidence/welcome.png
+            adb shell screencap -p /sdcard/welcome.png
+            adb pull /sdcard/welcome.png runtime-evidence/welcome.png
             adb shell uiautomator dump /sdcard/welcome.xml
             adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
             grep -q "SCORING HEROES" runtime-evidence/welcome.xml

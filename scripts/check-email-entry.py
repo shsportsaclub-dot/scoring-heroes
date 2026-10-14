@@ -16,8 +16,8 @@ def capture(name):
     time.sleep(2)
     subprocess.run(["adb", "shell", "uiautomator", "dump", "/sdcard/screen.xml"], check=True)
     subprocess.run(["adb", "pull", "/sdcard/screen.xml", "runtime-evidence/"+name+".xml"], check=True)
-    with open("runtime-evidence/"+name+".png", "wb") as output:
-        subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=output, check=True)
+    subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=True)
+    subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/"+name+".png"], check=True)
 
 tap_text("runtime-evidence/welcome.xml", "Languages")
 capture("registration")
