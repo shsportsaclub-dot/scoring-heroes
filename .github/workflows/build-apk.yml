@@ -67,6 +67,7 @@ jobs:
             python3 scripts/check-email-entry.py
 
       - name: Upload Welcome runtime evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: welcome-runtime-evidence

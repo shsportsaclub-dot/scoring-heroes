@@ -29,13 +29,26 @@ root = ET.parse("runtime-evidence/email-webview.xml")
 assert any("EMAIL / 6-DIGIT OTP" in n.get("text", "") for n in root.iter("node"))
 print("PASS: native registration entry and email WebView opened. No email requested; inbox delivery not tested.")
 
+
 tap_text("runtime-evidence/email-webview.xml", "‹")
-capture("sports-home")
-root = ET.parse("runtime-evidence/sports-home.xml")
-for title in ["Cricket Live", "Football Live", "Kabaddi Live", "Badminton Live"]:
-    assert any(title in n.get("text", "") for n in root.iter("node")), title
+wanted = {"Cricket Live", "Football Live", "Kabaddi Live", "Badminton Live", "Volleyball Live"}
+seen = set()
+for attempt in range(8):
+    capture("sports-home")
+    root = ET.parse("runtime-evidence/sports-home.xml")
+    seen.update(n.get("text", "") for n in root.iter("node") if n.get("text", "") in wanted)
+    if wanted <= seen:
+        break
+    subprocess.run(["adb", "shell", "input", "swipe", "540", "1800", "540", "650", "400"], check=True)
+assert wanted <= seen, "Missing sports: " + str(wanted - seen)
+for attempt in range(8):
+    capture("sports-home")
+    root = ET.parse("runtime-evidence/sports-home.xml")
+    if any(n.get("text", "") == "Football Live" for n in root.iter("node")):
+        break
+    subprocess.run(["adb", "shell", "input", "swipe", "540", "650", "540", "1800", "400"], check=True)
 tap_text("runtime-evidence/sports-home.xml", "Football Live")
 capture("football-webview")
 root = ET.parse("runtime-evidence/football-webview.xml")
 assert any("FOOTBALL LIVE" in n.get("text", "") for n in root.iter("node"))
-print("PASS: APK live sport entries and Football viewer route opened; production scoring not tested here.")
+print("PASS: all five APK sport entries and Football viewer route opened; production scoring not tested here.")
