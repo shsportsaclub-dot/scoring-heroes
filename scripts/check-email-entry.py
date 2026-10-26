@@ -39,3 +39,26 @@ time.sleep(2)
 nodes = capture("home-after-back")
 assert any("LIVE MATCH CENTRE" in n.get("text", "") for n in nodes), "Android Back did not restore native Home"
 print("PASS: Cricket viewer and Back navigation without OTP.")
+
+# Exercise every native sport route, including cards below the fold.
+for sport in ("Football", "Kabaddi", "Badminton", "Volleyball"):
+    label = sport + " Live"
+    visible = None
+    for attempt in range(6):
+        nodes = capture("find-" + sport.lower() + "-" + str(attempt))
+        if any(label in n.get("text", "") for n in nodes):
+            visible = nodes
+            break
+        subprocess.run(["adb", "shell", "input", "swipe", "530", "1740", "530", "650", "350"], check=True, timeout=20)
+        time.sleep(1)
+    assert visible is not None, "Missing native sport card: " + label
+    tap(visible, label)
+    time.sleep(2)
+    nodes = capture(sport.lower() + "-viewer")
+    assert any(label.upper() in n.get("text", "") for n in nodes), sport + " viewer header missing"
+    subprocess.run(["adb", "shell", "input", "keyevent", "4"], check=True, timeout=20)
+    time.sleep(2)
+    nodes = capture("home-after-" + sport.lower())
+    assert any("LIVE MATCH CENTRE" in n.get("text", "") for n in nodes), sport + " Back did not restore Home"
+    print("PASS: " + sport + " native viewer route and Back navigation.")
+print("PASS: All five sports navigation routes; backend live scores and scoring rules not validated.")
