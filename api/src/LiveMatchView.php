@@ -13,8 +13,26 @@ final class LiveMatchView {
         foreach($events as $e)if(($e['type']??null)==='delivery'&&($e['innings']??null)===$n)$ordered[$e['event_id']]=!isset($ordered[$e['event_id']])||$e['revision']>$ordered[$e['event_id']]['revision']?$e:$ordered[$e['event_id']];
         $ordered=array_values($ordered);
         usort($ordered,static fn($a,$b)=>($a['sequence']<=>$b['sequence'])?:strcmp($a['event_id'],$b['event_id']));
-        $last=array_slice($ordered,-12);
-        $commentary=array_map(static function($e){$run=(int)$e['bat_runs']+(int)$e['extra_runs'];return ['id'=>$e['event_id'],'text'=>'Delivery '.$e['sequence'].': '.$run.' run(s)'.(isset($e['wicket'])?' · WICKET':'')];},array_reverse($last));
+        // Compute over labels from legal deliveries; wides/no-balls do not
+        // advance the ball count. Revisions replace their original delivery.
+        $annotated=[];$legalSeen=0;
+        foreach($ordered as $e){
+            $over=intdiv($legalSeen,6);
+            $ball=($legalSeen%6)+1;
+            $annotated[]=['event'=>$e,'over'=>$over.'.'.$ball];
+            if(($e['legal_delivery']??false)===true)$legalSeen++;
+        }
+        $last=array_slice($annotated,-12);
+        $commentary=array_map(static function($item){
+            $e=$item['event'];
+            $bat=(int)($e['bat_runs']??0);
+            $extra=(int)($e['extra_runs']??0);
+            $kind=(string)($e['extra_type']??'none');
+            $wicket=isset($e['wicket']);
+            $description=$wicket?'WICKET':($bat===6?'SIX':($bat===4?'FOUR':($bat+$extra).' run(s)'));
+            if($kind!=='none')$description.=' · '.str_replace('_',' ',$kind).' +'.$extra;
+            return ['id'=>$e['event_id'],'over'=>$item['over'],'text'=>$description.' · '.($e['batter_id']??'Batter').' vs '.($e['bowler_id']??'Bowler')];
+        },array_reverse($last));
         $batViews=array_map(static fn($b)=>['name'=>$b['id'],'runs'=>$b['runs'],'balls'=>$b['balls'],'fours'=>$b['fours'],'sixes'=>$b['sixes'],'sr'=>$b['strike_rate']],$batters);
         $lastBowler=end($ordered);$bowlerId=$lastBowler['bowler_id']??null;
         $bowl=null;foreach($bowlers as $p)if($p['id']===$bowlerId){$bowl=['name'=>$p['id'],'wickets'=>$p['wickets'],'runs'=>$p['runs'],'overs'=>$p['overs'],'economy'=>$p['economy']];break;}
