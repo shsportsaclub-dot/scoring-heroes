@@ -8,6 +8,23 @@ permissions:
   contents: read
 
 jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: PHP syntax validation
+        run: |
+          find api/src api/tests -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Live chase and commentary regression
+        run: php api/tests/live_chase.php
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
