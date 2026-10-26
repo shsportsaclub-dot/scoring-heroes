@@ -16,11 +16,13 @@ public class MainActivity extends Activity {
   final String BASE="https://scoringheroes.com/";
   final String EMAIL_APP="https://scoring-heroes-api.onrender.com/";
   LinearLayout body,bottom; TextView title,sub;
+  boolean webScreenOpen=false;
   int white=Color.WHITE, muted=Color.rgb(180,194,208), navy=Color.rgb(3,17,31), panel=Color.rgb(10,31,49), red=Color.rgb(211,26,48);
   @Override public void onCreate(Bundle b){super.onCreate(b); showSplash();}
   TextView t(String s,int sp,boolean bold){TextView v=new TextView(this);v.setText(s);v.setTextColor(white);v.setTextSize(sp);v.setTypeface(null,bold?Typeface.BOLD:Typeface.NORMAL);v.setPadding(dp(16),dp(10),dp(16),dp(10));return v;}
   GradientDrawable bg(int c,float r){GradientDrawable g=new GradientDrawable();g.setColor(c);g.setCornerRadius(dp((int)r));g.setStroke(dp(1),Color.rgb(35,63,84));return g;}
   void showSplash(){
+    webScreenOpen=false;
     final FrameLayout root=new FrameLayout(this);
     root.setBackground(new WelcomeBackground());
 
@@ -153,6 +155,7 @@ public class MainActivity extends Activity {
   }
 
   void shell(String h,String s){
+    webScreenOpen=false;
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(navy);
     LinearLayout top=new LinearLayout(this);top.setGravity(Gravity.CENTER_VERTICAL);top.setPadding(dp(12),dp(8),dp(8),dp(8));top.setBackgroundColor(Color.rgb(5,25,42));
     TextView logo=t("SH",24,true);logo.setTextColor(Color.rgb(230,31,55));top.addView(logo,new LinearLayout.LayoutParams(dp(52),dp(52)));
@@ -196,9 +199,14 @@ public class MainActivity extends Activity {
   void showCricket(){shell("CRICKET","Match intelligence");hero("CRICKET CONTROL","Score • Field • Review • Performance");card("Field View","Oval field animation and player positions",BASE+"service-hub-v2/field-animation/","FIELD VIEW");card("Technical Performance","Bowling, batting and fielding measurements",BASE+"service-hub-v2/technical-performance/","TECHNICAL PERFORMANCE");card("Player Status","Match, season and career status",BASE+"service-hub-v2/player-status/","PLAYER STATUS");card("Broadcast / DRS","Camera, replay, review and graphics control",BASE+"service-hub-v2/broadcast/studio-v10.php","BROADCAST / DRS");}
   void showCommunity(){shell("COMMUNITY","Connect around the game");hero("SPORTS COMMUNITY","Players • Teams • Academies • Fans");card("Email • 6-digit OTP","Email registration and verification",EMAIL_APP,"EMAIL / 6-DIGIT OTP");card("Player Profile / Login","WhatsApp OTP and Player ID",BASE+"join.php","PLAYER PROFILE");card("Commentary Studio","Text, voice and match commentary",BASE+"service-hub-v2/commentary/studio.php","COMMENTARY");card("Notifications","Match and account alerts",BASE+"service-hub-v2/platform/mobile/?screen=notifications","NOTIFICATIONS");}
   void open(String url,String name){
+    webScreenOpen=true;
     LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(navy);
     LinearLayout bar=new LinearLayout(this);bar.setGravity(Gravity.CENTER_VERTICAL);TextView back=t("‹",34,true);back.setGravity(Gravity.CENTER);back.setOnClickListener(v->showHome());bar.addView(back,new LinearLayout.LayoutParams(dp(56),dp(56)));TextView n=t(name,17,true);bar.addView(n,new LinearLayout.LayoutParams(0,dp(56),1));root.addView(bar);
     WebView w=new WebView(this);WebSettings s=w.getSettings();s.setJavaScriptEnabled(true);s.setDomStorageEnabled(true);s.setMediaPlaybackRequiresUserGesture(false);s.setAllowFileAccess(false);w.setWebViewClient(new WebViewClient());w.loadUrl(url);root.addView(w,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
+  }
+  @Override public void onBackPressed(){
+    if(webScreenOpen){showHome();return;}
+    super.onBackPressed();
   }
   int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+0.5f);}
 }
