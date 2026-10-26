@@ -19,10 +19,18 @@ def capture(name):
     subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=True)
     subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/"+name+".png"], check=True)
 
-tap_text("runtime-evidence/welcome.xml", "Languages")
-capture("registration")
-root = ET.parse("runtime-evidence/registration.xml")
-assert any("Email • 6-digit OTP" in n.get("text", "") for n in root.iter("node"))
+# The initial screenshot may be taken before the Activity is fully interactive.
+# Retry the actual navigation and retain evidence from each attempt.
+registration_ready = False
+for attempt in range(1, 5):
+    capture("welcome-before-tap-" + str(attempt))
+    tap_text("runtime-evidence/welcome-before-tap-" + str(attempt) + ".xml", "Languages")
+    capture("registration")
+    root = ET.parse("runtime-evidence/registration.xml")
+    if any("Email • 6-digit OTP" in n.get("text", "") for n in root.iter("node")):
+        registration_ready = True
+        break
+assert registration_ready, "Registration screen did not appear after Languages tap; inspect runtime-evidence/registration.png"
 tap_text("runtime-evidence/registration.xml", "Email • 6-digit OTP")
 capture("email-webview")
 root = ET.parse("runtime-evidence/email-webview.xml")
