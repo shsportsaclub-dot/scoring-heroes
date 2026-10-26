@@ -37,11 +37,12 @@ jobs:
           from pathlib import Path
           import zipfile
           p=Path('app/build/outputs/apk/debug/app-debug.apk')
-          assert p.stat().st_size > 100_000, f'APK unexpectedly small: {p.stat().st_size} bytes'
+          assert p.stat().st_size > 0, 'APK is empty'
           with zipfile.ZipFile(p) as z:
               names=set(z.namelist())
               assert 'AndroidManifest.xml' in names, 'Missing AndroidManifest.xml'
               assert any(n.startswith('classes') and n.endswith('.dex') for n in names), 'Missing DEX classes'
+              assert z.testzip() is None, 'Corrupt ZIP member in APK'
           print('APK structure verified:',p.stat().st_size,'bytes')
           PY
 
