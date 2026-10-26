@@ -7,18 +7,18 @@ adb_ready() {
        grep -q '^1' runtime-evidence/boot-status.txt; then return 0; fi
     echo "ADB recovery attempt $attempt" >> runtime-evidence/adb-recovery.log
     timeout 8s adb reconnect offline || true
-    adb kill-server || true
     sleep 3
-    adb start-server || true
     timeout 15s adb wait-for-device || true
     sleep 5
   done
   return 1
 }
+echo 'Initial emulator connectivity check'
 adb_ready
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb shell am force-stop com.scoringheroes.app
 adb shell monkey -p com.scoringheroes.app -c android.intent.category.LAUNCHER 1
+echo 'App launch event sent; checking emulator health'
 sleep 3
 adb_ready
 adb devices -l | tee runtime-evidence/adb-devices.txt
