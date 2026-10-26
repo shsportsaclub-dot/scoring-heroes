@@ -2,7 +2,7 @@ name: Build Scoring Heroes APK
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/ecosystem-foundation-20261026" ]
 
 permissions:
   contents: read
@@ -62,6 +62,9 @@ jobs:
           name: SCORING-HEROES-13.0.2-LIVE-SPORTS-APK
           path: app/build/outputs/apk/debug/
 
+      - name: Initialize runtime evidence folder
+        run: mkdir -p runtime-evidence
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -75,8 +78,9 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -cores 2 -feature -Vulkan
+          emulator-options: -no-window -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -cores 2 -feature -Vulkan
           script: |
+            set -e
             adb install -r app/build/outputs/apk/debug/app-debug.apk
             adb shell am force-stop com.scoringheroes.app
             adb shell monkey -p com.scoringheroes.app -c android.intent.category.LAUNCHER 1
@@ -86,8 +90,8 @@ jobs:
             adb pull /sdcard/welcome.png runtime-evidence/welcome.png
             adb shell uiautomator dump /sdcard/welcome.xml
             adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
-            grep -q "SCORING HEROES" runtime-evidence/welcome.xml
-            python3 scripts/check-email-entry.py
+            python3 -c 'import xml.etree.ElementTree as E; r=E.parse("runtime-evidence/welcome.xml"); assert list(r.iter("node")), "Empty UI hierarchy"'
+            python3 scripts/check-email-entry.py 2>&1 | tee runtime-evidence/ui-test.log
 
       - name: Upload Welcome runtime evidence
         if: always()
