@@ -87,7 +87,22 @@ jobs:
             sleep 3
             mkdir -p runtime-evidence
             adb devices -l | tee runtime-evidence/adb-devices.txt
-            adb shell getprop sys.boot_completed > runtime-evidence/boot-status.txt
+            # Emulator can drop ADB briefly after launch; reconnect before every probe.
+            adb_ready() {
+              for attempt in 1 2 3 4 5 6; do
+                if timeout 12s adb shell getprop sys.boot_completed > runtime-evidence/boot-status.txt 2>&1 &&
+                   grep -q '^1' runtime-evidence/boot-status.txt; then return 0; fi
+                echo "ADB recovery attempt $attempt" >> runtime-evidence/adb-recovery.log
+                timeout 8s adb reconnect offline || true
+                adb kill-server || true
+                sleep 3
+                adb start-server || true
+                timeout 15s adb wait-for-device || true
+                sleep 5
+              done
+              return 1
+            }
+            adb_ready
             # Use device-side capture first to avoid hanging adb exec-out on unstable runners.
             captured=0
             for attempt in 1 2 3 4; do
@@ -104,6 +119,7 @@ jobs:
               adb start-server || true
               timeout 25s adb wait-for-device || true
               sleep 5
+              adb_ready || true
             done
             test "$captured" -eq 1
             test -s runtime-evidence/welcome.png
