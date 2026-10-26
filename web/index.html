@@ -17,4 +17,4 @@ $("back").addEventListener("click",()=>{if(history.length>1)history.back();else 
 for(const id of ["pin","bell"])$(id).addEventListener("click",()=>{$(id).setAttribute("aria-pressed",$(id).getAttribute("aria-pressed")==="true"?"false":"true");$("notice").textContent="Preview preference only; account sync and notifications are not yet enabled.";});
 async function connect(){const url=new URLSearchParams(location.search).get("feed");if(!url)return;if(!url.startsWith("/")||url.startsWith("//")){$("notice").textContent="Only same-origin feed URLs are supported.";return;}try{const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const data=await r.json();if(!data?.id||!Array.isArray(data.teams)||data.teams.length<2)throw Error("Invalid feed schema");match=data;render();$("notice").textContent="Provider feed connected. Detailed LIVE fields appear only when provided by the backend; timestamps and rights must be verified.";}catch(e){$("notice").textContent="Feed error: "+e.message+". Showing reference demo.";}}
 render();connect();
-</script></body></html>
+</script><script src="scorer-preview.js" defer></script></body></html>
