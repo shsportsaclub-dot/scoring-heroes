@@ -87,17 +87,8 @@ jobs:
             sleep 3
             mkdir -p runtime-evidence
             adb devices -l | tee runtime-evidence/adb-devices.txt
-            adb shell getprop sys.boot_completed | tee runtime-evidence/boot-status.txt
-            for attempt in 1 2 3; do
-              if timeout 25s adb exec-out screencap -p > runtime-evidence/welcome.png && test -s runtime-evidence/welcome.png; then
-                echo "Screenshot captured on attempt $attempt"
-                break
-              fi
-              echo "Screenshot attempt $attempt failed" | tee -a runtime-evidence/screenshot-errors.log
-              rm -f runtime-evidence/welcome.png
-              adb reconnect || true
-              sleep 3
-            done
+            timeout 8s adb shell getprop sys.boot_completed > runtime-evidence/boot-status.txt 2>&1 || true
+            for attempt in 1 2 3; do if timeout 20s adb exec-out screencap -p > runtime-evidence/welcome.png && test -s runtime-evidence/welcome.png; then echo "Screenshot captured on attempt $attempt"; break; else echo "Screenshot attempt $attempt failed" >> runtime-evidence/screenshot-errors.log; rm -f runtime-evidence/welcome.png; adb reconnect || true; sleep 3; fi; done
             test -s runtime-evidence/welcome.png
             timeout 40s adb shell uiautomator dump /sdcard/welcome.xml
             timeout 20s adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
