@@ -84,12 +84,12 @@ public class MainActivity extends Activity {
     Space lower=new Space(this);
     content.addView(lower,new LinearLayout.LayoutParams(1,0,0.14f));
 
-    TextView continueHint=t("Select language to continue",12,false);
+    TextView continueHint=t("Tap Languages to enter Live Sports — no OTP required",12,false);
     continueHint.setTextColor(muted);
     continueHint.setGravity(Gravity.CENTER);
     content.addView(continueHint,new LinearLayout.LayoutParams(-1,dp(42)));
 
-    language.setOnClickListener(v->showMobileEntry());
+    language.setOnClickListener(v->showHome());
     setContentView(root);
   }
 
