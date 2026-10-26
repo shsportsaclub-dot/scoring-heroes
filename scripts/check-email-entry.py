@@ -30,7 +30,24 @@ assert any("EMAIL / 6-DIGIT OTP" in n.get("text", "") for n in root.iter("node")
 print("PASS: native registration entry and email WebView opened. No email requested; inbox delivery not tested.")
 
 
-tap_text("runtime-evidence/email-webview.xml", "‹")
+# Return to the native Sports Home through Android's back navigation.
+# The WebView may contain its own ‹ glyph; a substring text tap is ambiguous.
+subprocess.run(["adb", "shell", "input", "keyevent", "4"], check=True)
+capture("after-email-back")
+root = ET.parse("runtime-evidence/after-email-back.xml")
+texts = [n.get("text", "") for n in root.iter("node")]
+if not any("SCORING HEROES" in t for t in texts):
+    # Use the app's explicit native header back control when Android back
+    # does not navigate away from the WebView.
+    matches = [n for n in root.iter("node") if n.get("text", "") == "‹"]
+    assert matches, "Email WebView back navigation did not expose native back control"
+    node = matches[0]
+    x1, y1, x2, y2 = map(int, re.findall("[0-9]+", node.get("bounds", "")))
+    subprocess.run(["adb", "shell", "input", "tap", str((x1+x2)//2), str((y1+y2)//2)], check=True)
+    capture("after-email-back")
+    root = ET.parse("runtime-evidence/after-email-back.xml")
+    texts = [n.get("text", "") for n in root.iter("node")]
+assert any("SCORING HEROES" in t for t in texts), "Did not return to native Sports Home"
 wanted = {"Cricket Live", "Football Live", "Kabaddi Live", "Badminton Live", "Volleyball Live"}
 seen = set()
 for attempt in range(8):
