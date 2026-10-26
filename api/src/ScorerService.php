@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__.'/EventJournal.php';
 require_once __DIR__.'/LiveMatchProjector.php';
+require_once __DIR__.'/ScorerEventValidator.php';
 final class ScorerService {
     public function __construct(private string $privateDir) {}
     private function journal(string $matchId):EventJournal {
@@ -12,6 +13,7 @@ final class ScorerService {
         if(($event['type']??null)!=='delivery')throw new InvalidArgumentException('Only normalized deliveries accepted');
         $old=$this->journal($matchId)->read();
         // Validate entire proposed history before committing; prevents invalid event corruption.
+        ScorerEventValidator::validate($event,$old);
         $new=[...$old,$event];
         LiveMatchProjector::project($new);
         $this->journal($matchId)->append($event);
