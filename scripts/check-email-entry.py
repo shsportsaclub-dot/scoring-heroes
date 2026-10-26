@@ -5,7 +5,21 @@ import time
 import xml.etree.ElementTree as ET
 
 def capture(name):
-    subprocess.run(["adb", "shell", "uiautomator", "dump", "/sdcard/screen.xml"], check=True, timeout=45)
+    last_error = None
+    for attempt in range(3):
+        subprocess.run(["adb", "shell", "rm", "-f", "/sdcard/screen.xml"], check=False, timeout=15)
+        try:
+            subprocess.run(["adb", "shell", "uiautomator", "dump", "/sdcard/screen.xml"], check=True, timeout=45)
+            last_error = None
+            break
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+            last_error = error
+            print("UI dump retry %d/3 for %s: %s" % (attempt + 1, name, error), flush=True)
+            time.sleep(3 * (attempt + 1))
+    if last_error is not None:
+        subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=False, timeout=20)
+        subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/" + name + "-failure.png"], check=False, timeout=20)
+        raise RuntimeError("UI hierarchy unavailable after retries: " + name) from last_error
     subprocess.run(["adb", "pull", "/sdcard/screen.xml", "runtime-evidence/" + name + ".xml"], check=True, timeout=30)
     subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=True, timeout=30)
     subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/" + name + ".png"], check=True, timeout=30)
