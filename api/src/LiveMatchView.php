@@ -21,6 +21,14 @@ final class LiveMatchView {
         $timeline=OverTimeline::project($events,$n);
         $overs=(string)$inn['overs'];
         $crr=$inn['legal_balls']?round($inn['runs']*6/$inn['legal_balls'],2):null;
-        return ['id'=>(string)($meta['id']??'local-demo'),'title'=>(string)($meta['title']??'Local scored match'),'status'=>'unverified','teams'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'score'=>$inn['runs'].'/'.$inn['wickets']],['name'=>(string)($meta['bowling_team']??'Bowling side'),'score'=>'—']],'inningsLabel'=>'Innings '.$n,'overs'=>$overs,'crr'=>$crr,'session'=>null,'oversLeftToday'=>null,'summary'=>'Local scorer events · not verified as a live provider feed','breakLabel'=>'Local scoring','currentOver'=>$timeline['current_over'],'batters'=>$batViews,'bowler'=>$bowl,'events'=>$commentary,'scorecard'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'runs'=>$inn['runs'],'wickets'=>$inn['wickets']]],'updated_at'=>gmdate('c')];
+        // Chase calculations use legal balls, not textual over decimals. Missing
+        // target/overs must never be fabricated for the public viewer.
+        $target=isset($meta['target'])&&is_int($meta['target'])&&$meta['target']>0?$meta['target']:null;
+        $totalOvers=isset($meta['totalOvers'])&&is_int($meta['totalOvers'])&&$meta['totalOvers']>0?$meta['totalOvers']:null;
+        $ballsRemaining=$totalOvers===null?null:max(0,$totalOvers*6-$inn['legal_balls']);
+        $runsNeeded=$target===null?null:max(0,$target-$inn['runs']);
+        $rrr=$target!==null&&$ballsRemaining!==null&&$ballsRemaining>0&&$runsNeeded>0?round($runsNeeded*6/$ballsRemaining,2):null;
+        $chaseMessage=$target===null||$ballsRemaining===null?null:($runsNeeded===0?'Target reached':($ballsRemaining===0?'Target not reached in allotted overs':$runsNeeded.' runs needed from '.$ballsRemaining.' balls'));
+        return ['id'=>(string)($meta['id']??'local-demo'),'title'=>(string)($meta['title']??'Local scored match'),'status'=>'unverified','teams'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'score'=>$inn['runs'].'/'.$inn['wickets']],['name'=>(string)($meta['bowling_team']??'Bowling side'),'score'=>'—']],'inningsLabel'=>'Innings '.$n,'overs'=>$overs,'legalBalls'=>$inn['legal_balls'],'totalOvers'=>$totalOvers,'target'=>$target,'runsNeeded'=>$runsNeeded,'ballsRemaining'=>$ballsRemaining,'rrr'=>$rrr,'chaseMessage'=>$chaseMessage,'crr'=>$crr,'session'=>null,'oversLeftToday'=>null,'summary'=>'Local scorer events · not verified as a live provider feed','breakLabel'=>'Local scoring','currentOver'=>$timeline['current_over'],'batters'=>$batViews,'bowler'=>$bowl,'events'=>$commentary,'scorecard'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'runs'=>$inn['runs'],'wickets'=>$inn['wickets']]],'updated_at'=>gmdate('c')];
     }
 }
