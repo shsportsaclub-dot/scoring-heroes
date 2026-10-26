@@ -38,5 +38,5 @@ test "$captured" -eq 1
 timeout 40s adb shell uiautomator dump /sdcard/welcome.xml
 timeout 20s adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
 python3 -c 'import xml.etree.ElementTree as E; r=E.parse("runtime-evidence/welcome.xml"); assert list(r.iter("node")), "Empty UI hierarchy"'
-python3 scripts/check-email-entry.py > runtime-evidence/ui-test.log 2>&1 || { cat runtime-evidence/ui-test.log; exit 1; }
+python3 scripts/check-sports-no-otp.py > runtime-evidence/ui-test.log 2>&1 || { cat runtime-evidence/ui-test.log; exit 1; }
 cat runtime-evidence/ui-test.log
