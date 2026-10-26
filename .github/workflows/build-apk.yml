@@ -74,11 +74,11 @@ jobs:
       - name: Boot emulator and capture registration runtime evidence
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+          api-level: 33
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -cores 2 -memory 2048
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -cores 2 -memory 1536
           script: bash scripts/emulator-evidence.sh
       - name: Capture diagnostics after emulator failure
         if: failure()
