@@ -78,7 +78,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -cores 2 -memory 2048 -feature -Vulkan
+          emulator-options: -no-window -gpu off -noaudio -no-boot-anim -no-snapshot -cores 2 -memory 1536
           script: |
             set -eu
             adb install -r app/build/outputs/apk/debug/app-debug.apk
@@ -87,8 +87,10 @@ jobs:
             sleep 3
             mkdir -p runtime-evidence
             adb devices -l | tee runtime-evidence/adb-devices.txt
+            timeout 15s adb wait-for-device || true
+            timeout 8s adb shell echo ready > runtime-evidence/adb-health.txt 2>&1 || true
             timeout 8s adb shell getprop sys.boot_completed > runtime-evidence/boot-status.txt 2>&1 || true
-            for attempt in 1 2 3; do if timeout 20s adb exec-out screencap -p > runtime-evidence/welcome.png && test -s runtime-evidence/welcome.png; then echo "Screenshot captured on attempt $attempt"; break; else echo "Screenshot attempt $attempt failed" >> runtime-evidence/screenshot-errors.log; rm -f runtime-evidence/welcome.png; adb reconnect || true; sleep 3; fi; done
+            for attempt in 1 2 3; do if timeout 12s adb exec-out screencap -p > runtime-evidence/welcome.png && test -s runtime-evidence/welcome.png; then echo "Screenshot captured on attempt $attempt"; break; else echo "Screenshot attempt $attempt failed" >> runtime-evidence/screenshot-errors.log; rm -f runtime-evidence/welcome.png; adb reconnect || true; timeout 15s adb wait-for-device || true; sleep 3; fi; done
             test -s runtime-evidence/welcome.png
             timeout 40s adb shell uiautomator dump /sdcard/welcome.xml
             timeout 20s adb pull /sdcard/welcome.xml runtime-evidence/welcome.xml
