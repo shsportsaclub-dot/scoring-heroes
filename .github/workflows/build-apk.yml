@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -33,6 +33,17 @@ jobs:
         run: |
           test -f app/build/outputs/apk/debug/app-debug.apk
           ls -lh app/build/outputs/apk/debug/app-debug.apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          p=Path('app/build/outputs/apk/debug/app-debug.apk')
+          assert p.stat().st_size > 100_000, f'APK unexpectedly small: {p.stat().st_size} bytes'
+          with zipfile.ZipFile(p) as z:
+              names=set(z.namelist())
+              assert 'AndroidManifest.xml' in names, 'Missing AndroidManifest.xml'
+              assert any(n.startswith('classes') and n.endswith('.dex') for n in names), 'Missing DEX classes'
+          print('APK structure verified:',p.stat().st_size,'bytes')
+          PY
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -51,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
