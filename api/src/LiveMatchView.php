@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/ScorecardProjector.php';
+require_once __DIR__.'/OverTimeline.php';
 final class LiveMatchView {
     public static function fromEvents(array $events,array $meta=[]):array {
         $score=ScorecardProjector::project($events);
@@ -17,8 +18,9 @@ final class LiveMatchView {
         $batViews=array_map(static fn($b)=>['name'=>$b['id'],'runs'=>$b['runs'],'balls'=>$b['balls'],'fours'=>$b['fours'],'sixes'=>$b['sixes'],'sr'=>$b['strike_rate']],$batters);
         $lastBowler=end($ordered);$bowlerId=$lastBowler['bowler_id']??null;
         $bowl=null;foreach($bowlers as $p)if($p['id']===$bowlerId){$bowl=['name'=>$p['id'],'wickets'=>$p['wickets'],'runs'=>$p['runs'],'overs'=>$p['overs'],'economy'=>$p['economy']];break;}
+        $timeline=OverTimeline::project($events,$n);
         $overs=(string)$inn['overs'];
         $crr=$inn['legal_balls']?round($inn['runs']*6/$inn['legal_balls'],2):null;
-        return ['id'=>(string)($meta['id']??'local-demo'),'title'=>(string)($meta['title']??'Local scored match'),'status'=>'unverified','teams'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'score'=>$inn['runs'].'/'.$inn['wickets']],['name'=>(string)($meta['bowling_team']??'Bowling side'),'score'=>'—']],'inningsLabel'=>'Innings '.$n,'overs'=>$overs,'crr'=>$crr,'session'=>null,'oversLeftToday'=>null,'summary'=>'Local scorer events · not verified as a live provider feed','breakLabel'=>'Local scoring','currentOver'=>['number'=>(string)(intdiv((int)$inn['legal_balls'],6)+1),'balls'=>array_map(static fn($e)=>(string)((int)$e['bat_runs']+(int)$e['extra_runs']),array_slice($last,-6)),'runs'=>array_sum(array_map(static fn($e)=>(int)$e['bat_runs']+(int)$e['extra_runs'],array_slice($last,-6)))],'batters'=>$batViews,'bowler'=>$bowl,'events'=>$commentary,'scorecard'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'runs'=>$inn['runs'],'wickets'=>$inn['wickets']]],'updated_at'=>gmdate('c')];
+        return ['id'=>(string)($meta['id']??'local-demo'),'title'=>(string)($meta['title']??'Local scored match'),'status'=>'unverified','teams'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'score'=>$inn['runs'].'/'.$inn['wickets']],['name'=>(string)($meta['bowling_team']??'Bowling side'),'score'=>'—']],'inningsLabel'=>'Innings '.$n,'overs'=>$overs,'crr'=>$crr,'session'=>null,'oversLeftToday'=>null,'summary'=>'Local scorer events · not verified as a live provider feed','breakLabel'=>'Local scoring','currentOver'=>$timeline['current_over'],'batters'=>$batViews,'bowler'=>$bowl,'events'=>$commentary,'scorecard'=>[['name'=>(string)($meta['batting_team']??'Batting side'),'runs'=>$inn['runs'],'wickets'=>$inn['wickets']]],'updated_at'=>gmdate('c')];
     }
 }
