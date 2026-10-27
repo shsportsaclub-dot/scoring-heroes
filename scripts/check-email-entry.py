@@ -1,54 +1,78 @@
-"""Check native email registration entry without sending any email."""
+"""OTP-free smoke test: welcome, native home, cricket and Back."""
 import re
 import subprocess
 import time
 import xml.etree.ElementTree as ET
 
-def tap_text(file, text):
-    nodes = ET.parse(file).iter("node")
-    node = next((n for n in nodes if text in n.get("text", "")), None)
-    if node is None:
-        raise AssertionError("Missing UI control: " + text)
-    x1, y1, x2, y2 = map(int, re.findall("[0-9]+", node.get("bounds", "")))
-    subprocess.run(["adb", "shell", "input", "tap", str((x1+x2)//2), str((y1+y2)//2)], check=True)
-
 def capture(name):
+    last_error = None
+    for attempt in range(3):
+        subprocess.run(["adb", "shell", "rm", "-f", "/sdcard/screen.xml"], check=False, timeout=15)
+        try:
+            subprocess.run(["adb", "shell", "uiautomator", "dump", "/sdcard/screen.xml"], check=True, timeout=45)
+            last_error = None
+            break
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+            last_error = error
+            print("UI dump retry %d/3 for %s: %s" % (attempt + 1, name, error), flush=True)
+            time.sleep(3 * (attempt + 1))
+    if last_error is not None:
+        subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=False, timeout=20)
+        subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/" + name + "-failure.png"], check=False, timeout=20)
+        raise RuntimeError("UI hierarchy unavailable after retries: " + name) from last_error
+    subprocess.run(["adb", "pull", "/sdcard/screen.xml", "runtime-evidence/" + name + ".xml"], check=True, timeout=30)
+    subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=True, timeout=30)
+    subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/" + name + ".png"], check=True, timeout=30)
+    return list(ET.parse("runtime-evidence/" + name + ".xml").iter("node"))
+
+def tap(nodes, label):
+    node = next((n for n in nodes if label in n.get("text", "")), None)
+    assert node is not None, "Missing UI control: " + label
+    x1, y1, x2, y2 = map(int, re.findall(r"\d+", node.get("bounds", "")))
+    subprocess.run(["adb", "shell", "input", "tap", str((x1+x2)//2), str((y1+y2)//2)], check=True, timeout=20)
+
+home = None
+for attempt in range(5):
+    nodes = capture("welcome-attempt-" + str(attempt))
+    if any("LIVE MATCH CENTRE" in n.get("text", "") for n in nodes):
+        home = nodes
+        break
+    if any("Languages" in n.get("text", "") for n in nodes):
+        tap(nodes, "Languages")
     time.sleep(2)
-    subprocess.run(["adb", "shell", "uiautomator", "dump", "/sdcard/screen.xml"], check=True)
-    subprocess.run(["adb", "pull", "/sdcard/screen.xml", "runtime-evidence/"+name+".xml"], check=True)
-    subprocess.run(["adb", "shell", "screencap", "-p", "/sdcard/screen.png"], check=True)
-    subprocess.run(["adb", "pull", "/sdcard/screen.png", "runtime-evidence/"+name+".png"], check=True)
 
-tap_text("runtime-evidence/welcome.xml", "Languages")
-capture("registration")
-root = ET.parse("runtime-evidence/registration.xml")
-assert any("Email • 6-digit OTP" in n.get("text", "") for n in root.iter("node"))
-tap_text("runtime-evidence/registration.xml", "Email • 6-digit OTP")
-capture("email-webview")
-root = ET.parse("runtime-evidence/email-webview.xml")
-assert any("EMAIL / 6-DIGIT OTP" in n.get("text", "") for n in root.iter("node"))
-print("PASS: native registration entry and email WebView opened. No email requested; inbox delivery not tested.")
+assert home is not None, "Native Home did not open without OTP; inspect welcome-attempt screenshots"
+assert any("Cricket Live" in n.get("text", "") for n in home), "Cricket entry missing on Home"
+print("PASS: Welcome to native sports Home without OTP.")
+tap(home, "Cricket Live")
+time.sleep(3)
+nodes = capture("cricket-viewer")
+assert any("CRICKET LIVE" in n.get("text", "") for n in nodes), "Cricket viewer missing"
+subprocess.run(["adb", "shell", "input", "keyevent", "4"], check=True, timeout=20)
+time.sleep(2)
+nodes = capture("home-after-back")
+assert any("LIVE MATCH CENTRE" in n.get("text", "") for n in nodes), "Android Back did not restore native Home"
+print("PASS: Cricket viewer and Back navigation without OTP.")
 
-
-tap_text("runtime-evidence/email-webview.xml", "‹")
-wanted = {"Cricket Live", "Football Live", "Kabaddi Live", "Badminton Live", "Volleyball Live"}
-seen = set()
-for attempt in range(8):
-    capture("sports-home")
-    root = ET.parse("runtime-evidence/sports-home.xml")
-    seen.update(n.get("text", "") for n in root.iter("node") if n.get("text", "") in wanted)
-    if wanted <= seen:
-        break
-    subprocess.run(["adb", "shell", "input", "swipe", "540", "1800", "540", "650", "400"], check=True)
-assert wanted <= seen, "Missing sports: " + str(wanted - seen)
-for attempt in range(8):
-    capture("sports-home")
-    root = ET.parse("runtime-evidence/sports-home.xml")
-    if any(n.get("text", "") == "Football Live" for n in root.iter("node")):
-        break
-    subprocess.run(["adb", "shell", "input", "swipe", "540", "650", "540", "1800", "400"], check=True)
-tap_text("runtime-evidence/sports-home.xml", "Football Live")
-capture("football-webview")
-root = ET.parse("runtime-evidence/football-webview.xml")
-assert any("FOOTBALL LIVE" in n.get("text", "") for n in root.iter("node"))
-print("PASS: all five APK sport entries and Football viewer route opened; production scoring not tested here.")
+# Exercise every native sport route, including cards below the fold.
+for sport in ("Football", "Kabaddi", "Badminton", "Volleyball"):
+    label = sport + " Live"
+    visible = None
+    for attempt in range(6):
+        nodes = capture("find-" + sport.lower() + "-" + str(attempt))
+        if any(label in n.get("text", "") for n in nodes):
+            visible = nodes
+            break
+        subprocess.run(["adb", "shell", "input", "swipe", "530", "1740", "530", "650", "350"], check=True, timeout=20)
+        time.sleep(1)
+    assert visible is not None, "Missing native sport card: " + label
+    tap(visible, label)
+    time.sleep(2)
+    nodes = capture(sport.lower() + "-viewer")
+    assert any(label.upper() in n.get("text", "") for n in nodes), sport + " viewer header missing"
+    subprocess.run(["adb", "shell", "input", "keyevent", "4"], check=True, timeout=20)
+    time.sleep(2)
+    nodes = capture("home-after-" + sport.lower())
+    assert any("LIVE MATCH CENTRE" in n.get("text", "") for n in nodes), sport + " Back did not restore Home"
+    print("PASS: " + sport + " native viewer route and Back navigation.")
+print("PASS: All five sports navigation routes; backend live scores and scoring rules not validated.")
