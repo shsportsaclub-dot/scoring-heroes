@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Team 0918 placeholder crest">
+<title>Team 0918 — Scoring Heroes editable placeholder</title>
+<defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="hsl(126,70%,35%)"/><stop offset="1" stop-color="hsl(241,75%,22%)"/></linearGradient></defs>
+<path d="M128 9 L246 128 L128 247 L10 128 Z" fill="url(#g)" stroke="#f7d36a" stroke-width="8"/>
+<circle cx="128" cy="107" r="49" fill="none" stroke="#fff" stroke-width="4" opacity=".7"/>
+<path d="M94 107h68M128 74v66" stroke="#fff" stroke-width="4" opacity=".65"/>
+<text x="128" y="182" font-family="Arial,sans-serif" font-size="31" font-weight="bold" text-anchor="middle" fill="#fff">SH0918</text>
+<text x="128" y="207" font-family="Arial,sans-serif" font-size="12" text-anchor="middle" fill="#fff">SCORING HEROES</text></svg>
