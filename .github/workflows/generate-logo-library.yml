@@ -1,0 +1,30 @@
+name: Generate 1000 SH Logo Assets
+on:
+  push:
+    paths:
+      - 'scripts/generate_logo_library.py'
+      - '.github/workflows/generate-logo-library.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate SVG files and manifests
+        run: python scripts/generate_logo_library.py
+      - name: Commit generated assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/logo-library/
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate 1000 original editable placeholder logos and manifests"
+            git push
+          fi
