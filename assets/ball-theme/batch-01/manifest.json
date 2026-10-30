@@ -1,0 +1,352 @@
+[
+  {
+    "id": "IN001",
+    "name": "BCCI",
+    "file": "assets/ball-theme/batch-01/01_bcci.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN002",
+    "name": "Andhra Cricket Association",
+    "file": "assets/ball-theme/batch-01/02_andhra_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN003",
+    "name": "Arunachal Cricket Association",
+    "file": "assets/ball-theme/batch-01/03_arunachal_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN004",
+    "name": "Assam Cricket Association",
+    "file": "assets/ball-theme/batch-01/04_assam_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN005",
+    "name": "Baroda Cricket Association",
+    "file": "assets/ball-theme/batch-01/05_baroda_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN006",
+    "name": "Bihar Cricket Association",
+    "file": "assets/ball-theme/batch-01/06_bihar_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN007",
+    "name": "Chhattisgarh State Cricket Sangh",
+    "file": "assets/ball-theme/batch-01/07_chhattisgarh_state_cricket_sangh.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN008",
+    "name": "Cricket Association of Bengal",
+    "file": "assets/ball-theme/batch-01/08_cricket_association_of_bengal.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN009",
+    "name": "Cricket Association of Mizoram",
+    "file": "assets/ball-theme/batch-01/09_cricket_association_of_mizoram.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN010",
+    "name": "Cricket Association of Pondicherry",
+    "file": "assets/ball-theme/batch-01/10_cricket_association_of_pondicherry.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN011",
+    "name": "Delhi and District Cricket Association",
+    "file": "assets/ball-theme/batch-01/11_delhi_and_district_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN012",
+    "name": "Goa Cricket Association",
+    "file": "assets/ball-theme/batch-01/12_goa_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN013",
+    "name": "Gujarat Cricket Association",
+    "file": "assets/ball-theme/batch-01/13_gujarat_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN014",
+    "name": "Haryana Cricket Association",
+    "file": "assets/ball-theme/batch-01/14_haryana_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN015",
+    "name": "Himachal Pradesh Cricket Association",
+    "file": "assets/ball-theme/batch-01/15_himachal_pradesh_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN016",
+    "name": "Hyderabad Cricket Association",
+    "file": "assets/ball-theme/batch-01/16_hyderabad_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN017",
+    "name": "Jammu and Kashmir Cricket Association",
+    "file": "assets/ball-theme/batch-01/17_jammu_and_kashmir_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN018",
+    "name": "Jharkhand State Cricket Association",
+    "file": "assets/ball-theme/batch-01/18_jharkhand_state_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN019",
+    "name": "Karnataka State Cricket Association",
+    "file": "assets/ball-theme/batch-01/19_karnataka_state_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN020",
+    "name": "Kerala Cricket Association",
+    "file": "assets/ball-theme/batch-01/20_kerala_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN021",
+    "name": "Madhya Pradesh Cricket Association",
+    "file": "assets/ball-theme/batch-01/21_madhya_pradesh_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN022",
+    "name": "Maharashtra Cricket Association",
+    "file": "assets/ball-theme/batch-01/22_maharashtra_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN023",
+    "name": "Manipur Cricket Association",
+    "file": "assets/ball-theme/batch-01/23_manipur_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN024",
+    "name": "Meghalaya Cricket Association",
+    "file": "assets/ball-theme/batch-01/24_meghalaya_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN025",
+    "name": "Mumbai Cricket Association",
+    "file": "assets/ball-theme/batch-01/25_mumbai_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN026",
+    "name": "Nagaland Cricket Association",
+    "file": "assets/ball-theme/batch-01/26_nagaland_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN027",
+    "name": "Odisha Cricket Association",
+    "file": "assets/ball-theme/batch-01/27_odisha_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN028",
+    "name": "Punjab Cricket Association",
+    "file": "assets/ball-theme/batch-01/28_punjab_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN029",
+    "name": "Rajasthan Cricket Association",
+    "file": "assets/ball-theme/batch-01/29_rajasthan_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN030",
+    "name": "Saurashtra Cricket Association",
+    "file": "assets/ball-theme/batch-01/30_saurashtra_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN031",
+    "name": "Sikkim Cricket Association",
+    "file": "assets/ball-theme/batch-01/31_sikkim_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN032",
+    "name": "Tamil Nadu Cricket Association",
+    "file": "assets/ball-theme/batch-01/32_tamil_nadu_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN033",
+    "name": "Telangana Cricket Association",
+    "file": "assets/ball-theme/batch-01/33_telangana_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN034",
+    "name": "Tripura Cricket Association",
+    "file": "assets/ball-theme/batch-01/34_tripura_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN035",
+    "name": "Uttar Pradesh Cricket Association",
+    "file": "assets/ball-theme/batch-01/35_uttar_pradesh_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN036",
+    "name": "Uttarakhand Cricket Association",
+    "file": "assets/ball-theme/batch-01/36_uttarakhand_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN037",
+    "name": "Vidarbha Cricket Association",
+    "file": "assets/ball-theme/batch-01/37_vidarbha_cricket_association.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN038",
+    "name": "Railways Sports Promotion Board",
+    "file": "assets/ball-theme/batch-01/38_railways_sports_promotion_board.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "IN039",
+    "name": "Services Sports Control Board",
+    "file": "assets/ball-theme/batch-01/39_services_sports_control_board.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT001",
+    "name": "India Cricket",
+    "file": "assets/ball-theme/batch-01/40_india_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT002",
+    "name": "Australia Cricket",
+    "file": "assets/ball-theme/batch-01/41_australia_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT003",
+    "name": "England Cricket",
+    "file": "assets/ball-theme/batch-01/42_england_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT004",
+    "name": "Pakistan Cricket",
+    "file": "assets/ball-theme/batch-01/43_pakistan_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT005",
+    "name": "Bangladesh Cricket",
+    "file": "assets/ball-theme/batch-01/44_bangladesh_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT006",
+    "name": "New Zealand Cricket",
+    "file": "assets/ball-theme/batch-01/45_new_zealand_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT007",
+    "name": "South Africa Cricket",
+    "file": "assets/ball-theme/batch-01/46_south_africa_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT008",
+    "name": "Sri Lanka Cricket",
+    "file": "assets/ball-theme/batch-01/47_sri_lanka_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT009",
+    "name": "West Indies Cricket",
+    "file": "assets/ball-theme/batch-01/48_west_indies_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT010",
+    "name": "Afghanistan Cricket",
+    "file": "assets/ball-theme/batch-01/49_afghanistan_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  },
+  {
+    "id": "INT011",
+    "name": "Ireland Cricket",
+    "file": "assets/ball-theme/batch-01/50_ireland_cricket.png",
+    "style": "SCORING_HEROES_BALL_CONCEPT",
+    "official_logo_verified": false
+  }
+]
