@@ -1,0 +1,27 @@
+name: Generate Ball Theme Batch 01
+on:
+  push:
+    paths:
+      - scripts/generate_ball_theme_batch01.py
+      - .github/workflows/ball-theme-batch01.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install Pillow==11.3.0
+      - run: python scripts/generate_ball_theme_batch01.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/ball-theme/batch-01/
+          if ! git diff --cached --quiet; then
+            git commit -m "Add 50 separate ball theme PNG concept assets"
+            git push
+          fi
